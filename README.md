@@ -1,4 +1,4 @@
-# Kubernetes Hello World
+# Spring Boot sample with Docker and Kubernetes
 This is to demo the containerization of Spring Boot application to Docker and Kubernetes.
 
 ## Before you begin
