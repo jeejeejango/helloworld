@@ -15,9 +15,9 @@ application or use this git project. This demo include a REST endpoint
 [\/hello](http://localhost:8080/hello) to echo a message with current timestamp.
 
 ### Building the Spring Boot Application
-To generate the artifacts:
+To build the artifacts:
 ``` bash
-mvn clean packge
+mvn clean compile
 ```
 
 You can check in the directory target for a jar file name helloworld.jar
@@ -28,9 +28,10 @@ Ensure that the Docker is running on your machine. To check if it's running:
 docker info
 ```
 
-To build the docker image:
+[jib-maven-plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin)
+will build the docker image to daemon without the Dockerfile:
 ```bash
-mvn dockerfile:build
+mvn jib:dockerBuild
 ```
 
 To validate if the docker image has been created:
@@ -41,14 +42,14 @@ docker images
 And you should see output like this:
 ```bash
 REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
-jeejeejango/springboot-helloworld   0.0.1-SNAPSHOT      c0a9c2628088        4 seconds ago       99.3MB
-openjdk                             8-jre-alpine        2e01f547f003        3 days ago          83MB
+jeejeejango/springboot-helloworld   latest              1113bae41761        20 seconds ago      99.2MB
+openjdk                             8-jre-alpine        2e01f547f003        4 days ago          83MB
 ```
 
 ### Running the Docker image
 To run the helloworld images, run the following command:
 ```bash
-docker run -d -p 8080:8080 helloworld
+docker run -d -p 8080:8080 jeejeejango/springboot-helloworld
 ```
 
 You can validate if a container is created successfully and running:
@@ -57,8 +58,8 @@ docker ps
 ``` 
 Output (Note that container_id and name will be different on your machine):
 ```bash
-CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES
-7ee618bd6deb        helloworld          "java -Djava.securit…"   About a minute ago   Up About a minute   0.0.0.0:8080->8080/tcp   admiring_volhard
+CONTAINER ID        IMAGE                               COMMAND                  CREATED              STATUS              PORTS                    NAMES
+8d037fa20ad7        jeejeejango/springboot-helloworld   "java -cp /app/resou…"   About a minute ago   Up About a minute   0.0.0.0:8080->8080/tcp   suspicious_nightingale
 ```
 
 ### Testing the Container 
@@ -74,5 +75,37 @@ You can also testing with curl if available:
 curl http://<docker_machine_ip>:8080/hello
 ```
 
-## Kubernetes
-//todo
+### Deployment image to Registry
+To deploy image to  Registry:
+```bash
+mvn compile jib:build
+```
+Note: You will need to login to Docker Hub using `docker login`. You will need to change 
+to your docker registry username in the pom file.
+
+## Kubernetes/Minikube
+After deploying the docker image to the registry, you can now deploy this image on minikube.
+Check if  minikube is up and running using `minikube status`. To deploy this to minikube:
+```bash
+kubectl apply -f deploy/kubernetes
+```
+
+This will apply the deployment and service configuration to minikube. Check if the pods 
+are running using `kubectl get po` and you can check the results:
+```bash
+NAME                                    READY   STATUS    RESTARTS   AGE
+springboot-helloworld-f7fd5974f-npprb   1/1     Running   0          6m
+springboot-helloworld-f7fd5974f-p577n   1/1     Running   0          6m
+```
+
+Now you can check if the service is running using `kubectl get svc` and validate the 
+results:
+```bash
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+springboot-helloworld   NodePort    10.102.204.239   <none>        8080:31355/TCP   7m
+```
+
+To run the service, you can run `minikube service springboot-helloworld` and a new 
+browser will be launched. Ensure endpoint `/hello` is added to the url.
+
+You can also run `minikube dashboard` to launch the Kubernetes dashboard.
