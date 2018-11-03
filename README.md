@@ -83,6 +83,10 @@ mvn compile jib:build
 Note: You will need to login to Docker Hub using `docker login`. You will need to change 
 to your docker registry username in the pom file.
 
+### Deployment image to OCI Registry (OCIR)
+You can also deploy the docker image to OCI Registry. Please refer to the tutorial 
+[here](https://www.oracle.com/webfolder/technetwork/tutorials/obe/oci/registry/index.html).
+
 ## Kubernetes/Minikube
 After deploying the docker image to the registry, you can now deploy this image on minikube.
 Check if  minikube is up and running using `minikube status`. To deploy this to minikube:
@@ -109,3 +113,11 @@ To run the service, you can run `minikube service springboot-helloworld` and a n
 browser will be launched. Ensure endpoint `/hello` is added to the url.
 
 You can also run `minikube dashboard` to launch the Kubernetes dashboard.
+
+## Kubernetes/OKE
+The steps for deployment to 
+[OKE](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) 
+is the same. Please refer to the terraform script
+ [here](https://github.com/jeejeejango/terraform-oci-scripts/tree/master/oke-cluster) 
+for the installation. You will need to download the kubeconfig from OKE.
+
