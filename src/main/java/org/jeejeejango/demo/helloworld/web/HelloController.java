@@ -1,4 +1,4 @@
-package com.jeejeejango.demo.helloworld.web;
+package org.jeejeejango.demo.helloworld.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

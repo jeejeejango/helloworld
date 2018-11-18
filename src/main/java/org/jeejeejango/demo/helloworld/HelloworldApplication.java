@@ -1,4 +1,4 @@
-package com.jeejeejango.demo.helloworld;
+package org.jeejeejango.demo.helloworld;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
