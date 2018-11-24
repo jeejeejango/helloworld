@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-helloworld
+  labels:
+    app: springboot-helloworld
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  selector:
+    app: springboot-helloworld
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-helloworld
+  labels:
+    app: springboot-helloworld
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springboot-helloworld
+  template:
+    metadata:
+      labels:
+        app: springboot-helloworld
+    spec:
+      containers:
+      - name: springboot-helloworld
+        image: jeejeejango/springboot-helloworld
+        ports:
+        - containerPort: 8080
+          name: server
