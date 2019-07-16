@@ -1,4 +1,4 @@
-package com.jeejeejango.demo.helloworld;
+package org.jeejeejango.demo.helloworld;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
